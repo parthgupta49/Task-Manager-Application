@@ -10,10 +10,12 @@ import Dashboard from './pages/Dashboard'
 import MyProfile from './components/core/dashboard/MyProfile'
 import Settings from './components/core/dashboard/Settings/index';
 import MyTasks from './components/core/dashboard/MyTasks'
+import Queued from './components/common/Queued'
 const App = () => {
   return (
     <div className='w-screen min-h-screen bg-richblack-900 flex flex-col font-inter'>
       <Navbar />
+      <Queued/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="login" element={<Login />} />
