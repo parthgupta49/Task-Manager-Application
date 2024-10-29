@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
     // origin : "http://localhost:3000",
-    origin : "https://task-manager-assignment-application.vercel.app/",
+    origin : "https://task-manager-assignment-application.vercel.app",
     credentials : true
 }));
 app.use(fileUpload({ useTempFiles: true, tempFileDir: "/tmp/", }));
