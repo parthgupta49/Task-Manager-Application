@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const {TOKEN_NAME} = require('../utils/constants')
 // const User = require('../models/User');
 exports.auth = async(req,res,next) => {
     try {
         console.log(req.cookies);
-        const {token} = req.cookies;
+        const token = req.cookies[TOKEN_NAME] || req.cookies?.token;
         if(!token) return res.status(401).json({success : false, message : 'No token is provided'});
         const payload = jwt.verify(token, process.env.JWT_SECRET);
         if (!payload) return res.status(403).json(({success : false, message : 'Token is not valid'}))
