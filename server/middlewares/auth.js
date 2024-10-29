@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const {TOKEN_NAME} = require('../utils/constants')
+const TOKEN_NAME = "vercel-feature-flags"
 // const User = require('../models/User');
 exports.auth = async(req,res,next) => {
     try {
