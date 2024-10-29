@@ -27,66 +27,69 @@ export function getAllTasks() {
         dispatch(setLoading(false));
     }
 }
-export function addTask(title, description, category) {
+export function addTask(title, description, category, navigate) {
     return async (dispatch) => {
         const toastId = toast.loading("Loading...");
         dispatch(setLoading(true));
         try {
             const response = await apiConnector("POST", ADD_TASK, { title, description, category }, null, null, true);
-            console.log(response.data);
-            if (!response.data.success) {
+            console.log(response?.data);
+            if (!response?.data?.success) {
                 throw new Error(response.data.message);
             }
-            dispatch(setTasks(response.data.user.tasks))
-            localStorage.setItem('tasks', JSON.stringify(response.data.user.tasks));
+            toast.dismiss(toastId);
+            dispatch(setTasks(response?.data?.updatedUser?.tasks))
+            localStorage.setItem('tasks', JSON.stringify(response?.data?.updatedUser?.tasks));
+            toast.success(response?.data?.message);
         } catch (error) {
-
             console.log("ADD TASK ERROR", error.response);
-            toast.error(error.response.data.message);
-            CheckForTokenExpiration(error.response.data.message, toastId);
+            CheckForTokenExpiration(error.response.data.message, toastId, navigate);
         }
         dispatch(setLoading(false));
-        toast.dismiss(toastId);
+        
     }
 }
 
-export function editTask(newTitle, newDescription, newCategory) {
+export function editTask(taskId,newTitle, newDescription, newCategory,navigate) {
     return async (dispatch) => {
         const toastId = toast.loading("Loading...");
         dispatch(setLoading(true));
         try {
-            const response = await apiConnector("PUT", EDIT_TASK, { newTitle, newDescription, newCategory }, null, null, true);
-            console.log(response.data);
+            const response = await apiConnector("PUT", EDIT_TASK, { taskId,newTitle, newDescription, newCategory }, null, null, true);
+            console.log("EDIT TASK API RESPONSE : ",response.data);
             if (!response.data.success) {
                 throw new Error(response.data.message);
             }
-            dispatch(setTasks(response.data.user.tasks))
-            localStorage.setItem('tasks', JSON.stringify(response.data.user.tasks));
+            dispatch(setTasks(response?.data?.updatedUser?.tasks))
+            localStorage.setItem('tasks', JSON.stringify(response?.data?.updatedUser?.tasks));
+            toast.success(response?.data?.message);
         } catch (error) {
             console.log("EDIT TASK ERROR", error.response);
             toast.error(error.response.data.message);
-            CheckForTokenExpiration(error.response.data.message, toastId);
+            CheckForTokenExpiration(error.response.data.message, toastId,navigate);
         }
         dispatch(setLoading(false));
-        toast.dismiss(toastId);
+        if(toastId){toast.dismiss(toastId);}
     }
 }
-export function deleteTask(taskId) {
+export function deleteTask(taskId,navigate) {
     return async (dispatch) => {
         const toastId = toast.loading("Loading...");
         dispatch(setLoading(true));
         try {
             const response = await apiConnector("DELETE", DELETE_TASK, { taskId }, null, null, true);
-            console.log(response.data);
-            if (!response.data.success) {
+            console.log(response?.data);
+            if (!response?.data?.success) {
                 throw new Error(response.data.message);
             }
-            dispatch(setTasks(response.data.user.tasks))
-            localStorage.setItem('tasks', JSON.stringify(response.data.user.tasks));
+            toast.dismiss(toastId);
+            dispatch(setTasks(response?.data?.updatedUser?.tasks))
+            localStorage.setItem('tasks', JSON.stringify(response?.data?.updatedUser?.tasks));
+            toast.success(response?.data?.message);
         } catch (error) {
-            console.log("DELETE TASK ERROR", error.response);
-            toast.error(error.response.data.message);
-            CheckForTokenExpiration(error.response.data.message, toastId);
+            console.log("DELETE TASK ERROR", error?.response);
+            toast.error(error?.response?.data?.message);
+            CheckForTokenExpiration(error?.response?.data?.message, toastId,navigate);
         }
         dispatch(setLoading(false));
         toast.dismiss(toastId);

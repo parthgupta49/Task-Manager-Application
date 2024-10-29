@@ -28,21 +28,17 @@ const Navbar = () => {
             btn2Handler: () => setModalData(null)
         })
     }
-
-    console.log("user is ", user);
-    // console.log("token is ", token);
-
     return (
-        <div className='flex h-14 items-center justify-center border-b-[1px] border-black bg-gray-500'>
+        <div className='flex h-14 items-center justify-center border-b-[1px] border-richblue-600 bg-richblack-700'>
             <div className='w-11/12 max-w-maxContent mx-auto flex items-center justify-between '>
                 {/* logo */}
-                <div className='text-richblack-25 text-lg font-medium'>
-                    LOGO_MAIN_APPLICATION
-                </div>
+                <Link to={"/"}><div className='text-richblack-25 text-2xl font-semibold font-mono '>
+                    MANAGE YOUR TASKS
+                </div></Link>
                 {/* buttons */}
                 <div>
                     {
-                        user ? <div className='flex gap-4 items-center'><Profile/><button className={`rounded-lg border p-2 px-3 text-richblack-50 "} `}
+                        user ? <div className='flex gap-4 items-center'><Profile /><button className={`rounded-lg border p-2 px-3 text-richblack-50 "} `}
                             onClick={logoutBTNHandler}
                         >Logout</button></div> :
                             <div className='flex gap-4 items-center text-richblack-50' >

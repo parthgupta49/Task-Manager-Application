@@ -1,6 +1,6 @@
 const User = require('../models/User');
 const OTP = require('../models/Otp');
-const otpGenerator = require('otp-generator');
+const otpGenerator = require('otp-generator')
 const bcrypt = require('bcrypt');
 const Profile = require('../models/Profile');
 const jwt = require('jsonwebtoken');
@@ -10,7 +10,7 @@ exports.sendOTP = async (req, res) => {
     try {
         const { email } = req.body;
         // check if email already exists
-        const existingUser = await User.findOne({ "email": email });
+        const existingUser = await User.findOne({ "email": email })
         if (existingUser) {
             return res.status(401).json({ success: false, message: "Email already exists." });
         }

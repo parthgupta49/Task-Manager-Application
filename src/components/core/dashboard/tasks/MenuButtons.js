@@ -5,7 +5,7 @@ import ViewTask from './ViewTask'
 
 const MenuButtons = ({task}) => {
   return (
-    <div className='flex gap-3'>
+    <div className='flex gap-3 items-center pb-2'>
         <DeleteTask task = {task}/>
         <EditTask   task = {task}/>
         <ViewTask   task = {task}/>

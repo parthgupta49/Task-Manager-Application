@@ -83,9 +83,9 @@ export function editMyProfile(dateOfBirth, about, gender) {
         dispatch(setLoading(true));
         try {
             const response = await apiConnector("PUT", UPDATE_PROFILE_API, { dateOfBirth, about, gender }, null, null, true)
-            console.log(response.data);
-            if (!response.data.success) {
-                throw new Error(response.data.message);
+            console.log(response?.data);
+            if (!response?.data?.success) {
+                throw new Error(response?.data?.message);
             }
             dispatch(setUser(response.data.user));
             localStorage.setItem('user', JSON.stringify(response?.data?.user));

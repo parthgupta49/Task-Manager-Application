@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
-import { getAllTasks } from "../../../services/operations/taskAPI";
 import TaskCard from "./TaskCard";
 import IconBTN from "../../common/IconBTN";
 import Button from "../Homepage/Button";
@@ -17,11 +15,12 @@ export default function MyTasks() {
     const [tasksDoneList, setTasksDoneList] = useState(null);
     // const [todoList,setTodoList] = useState(null);
     // Fetch tasks when the component mounts
-    useEffect(() => {
-        getAllTasks();
-    }, [dispatch]); // Only run once on mount
+    // useEffect(() => {
+    //     getAllTasks();
+    // }, [dispatch]); // Only run once on mount
 
     // Update local state whenever tasks change
+    console.log("task in MyTasks.js",tasks);
     useEffect(() => {
         if (tasks) {
             setTodoList(tasks.filter(task => task?.category?.name === 'todo'));
@@ -38,8 +37,8 @@ export default function MyTasks() {
     return (
         <div>
         <AddTask/>
-        <h1 className="text-white">My Tasks</h1>
-            <div className="flex w-full gap-4">
+        <h1 className="text-richblack-100 text-3xl font-medium text-center">My Tasks</h1>
+            <div className="flex w-full gap-4 pt-10">
                 {/* todo */}
                 <div className="w-[60%] h-[30rem] border-2 border-richblack-200 bg-white">
                     {/* name of the category */}
@@ -59,14 +58,27 @@ export default function MyTasks() {
                     {/* name of the category */}
                     <div>In-Progress</div>
                     {/* tasks */}
-                    <div></div>
+                    <div>
+                    {
+                            inProgressList?.map((task, index) => (
+                                <TaskCard key={index} task={task} />
+                            ))
+
+                        }
+                    </div>
                 </div>
                 {/* done */}
                 <div className="w-[60%] h-[30rem] border-2 border-richblack-200 bg-white">
                     {/* name of the category */}
                     <div>Done</div>
                     {/* tasks */}
-                    <div></div>
+                    <div>
+                        {
+                            tasksDoneList?.map((task, index) => (
+                                <TaskCard key={index} task={task} />
+                            ))
+                        }
+                    </div>
                 </div>
             </div>
         </div>

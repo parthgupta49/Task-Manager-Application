@@ -55,10 +55,6 @@ const MyProfile = () => {
                                 <p>{user?.lastname}</p>
                             </div>
                             <div>
-                                <p className=' text-richblack-500'>Phone Number</p>
-                                <p>{user?.additionalDetails?.contactNumber ?? "Edit Phone Number"}</p>
-                            </div>
-                            <div>
                                 <p className=' text-richblack-500'>Date Of Birth</p>
                                 <p>{userDateOfBirth ?? "Please Input your Date Of Birth"}</p>
                             </div>

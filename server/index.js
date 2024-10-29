@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const PORT = process.env.PORT || 4001
 
-const dbConnect = require('./config/database')
+const dbConnect = require('./config/database');
 dbConnect();
 const userRoutes    = require('./routes/User');
 const profileRoutes = require('./routes/Profile');
@@ -21,7 +21,8 @@ const fileUpload = require("express-fileupload");
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin : "http://localhost:3000",
+    // origin : "http://localhost:3000",
+    origin : "https://task-manager-assignment-application.vercel.app/",
     credentials : true
 }));
 app.use(fileUpload({ useTempFiles: true, tempFileDir: "/tmp/", }));

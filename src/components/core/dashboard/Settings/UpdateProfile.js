@@ -23,7 +23,8 @@ const UpdateProfile = () => {
   const {user} = useSelector(store=>store.profile)
   const {additionalDetails} = user;
   const myDOB = new Date(additionalDetails?.dateOfBirth)
-  const aboutLength = additionalDetails?.about.length;
+  const aboutLength = additionalDetails?.about?.length  ?? null;
+  console.log(aboutLength)
   const { register, handleSubmit, reset, formState: { errors, isSubmitSuccessful } } = useForm({
     defaultValues: {
       dateOfBirth: `${additionalDetails?.dateOfBirth ?  formatDateToYYYYMMDD(myDOB) : ""}`,
@@ -87,7 +88,7 @@ const UpdateProfile = () => {
           <label className='flex flex-col text-richblack-100 w-[48%]'>
             <p>About</p>
             <textarea
-              rows={`${aboutLength && aboutLength < 120 ? 2 : 5 }`}
+              rows={`${aboutLength!==null ? (aboutLength < 120 ? 2 : 5) : 1}`}
               {...register("about", { required: true })} placeholder='Enter Bio Details' className=' overflow-hidden outline-none placeholder:text-richblack-200 placeholder:font-semibold rounded-lg p-3 bg-richblack-700 text-white' />
           </label>
         </div>

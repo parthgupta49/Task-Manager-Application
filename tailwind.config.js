@@ -125,23 +125,51 @@ module.exports = {
         800: "#171717",
         900: "#141414",
       },
+      green: {
+        5: "#E6FFED",
+        25: "#B2F2BB",
+        50: "#6DD3A0",
+        100: "#38C172",
+        200: "#28A745",
+        300: "#218838",
+        400: "#1E7E34",
+        500: "#1C7430",
+        600: "#1A6B2B",
+        700: "#155E24",
+        800: "#124D1C",
+        900: "#0E3B13",
+      },
+      red: {
+        5: "#FFE5E5",
+        25: "#FFB3B3",
+        50: "#FF7F7F",
+        100: "#FF4C4C",
+        200: "#FF0000",
+        300: "#DB0000",
+        400: "#B70000",
+        500: "#A00000",
+        600: "#8A0000",
+        700: "#740000",
+        800: "#5E0000",
+        900: "#480000",
+      },
     },
     extend: {
       maxWidth: {
         maxContent: "1260px",
         maxContentTab: "650px"
       },
-      boxShadow : {
-        'yellowBtn' : '2px 2px rgba(255, 214, 10,0.8)',
-        'blackBtn' : '2px 2px rgba(255, 255, 255, 0.2)',
-        'video' : '20px 25px rgb(255,255,255)',
-        'instructorImage' : '-20px -20px rgb(255,255,255)',
-        'cardShadow' : '10px 10px rgb(255, 214, 10)'
+      boxShadow: {
+        'yellowBtn': '2px 2px rgba(255, 214, 10,0.8)',
+        'blackBtn': '2px 2px rgba(255, 255, 255, 0.2)',
+        'video': '20px 25px rgb(255,255,255)',
+        'instructorImage': '-20px -20px rgb(255,255,255)',
+        'cardShadow': '10px 10px rgb(255, 214, 10)'
       },
-      backgroundImage : {
-        'highlightedtext' : 'linear-gradient(to right,#1FA2FF 0%,#12D8FA 50%,#A6FFCB 100%)'
+      backgroundImage: {
+        'highlightedtext': 'linear-gradient(to right,#1FA2FF 0%,#12D8FA 50%,#A6FFCB 100%)'
       }
-      
+
     },
   },
   plugins: [],
