@@ -1,26 +1,24 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import TaskCard from "./TaskCard";
-import IconBTN from "../../common/IconBTN";
-import Button from "../Homepage/Button";
 import AddTask from "./tasks/AddTask";
+import { getAllTasks } from "../../../services/operations/taskAPI";
+import { useNavigate } from "react-router-dom";
+import { setTasks } from "../../../slices/taskSlice";
 export default function MyTasks() {
-    // const { tasks } = useSelector((state) => state.profile.user);
-    // const [tasks,setTasks] = useState(null);
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { tasks, loader } = useSelector(store => store.tasks);
-    const [todoList, setTodoList] = useState(null);
-    const [inProgressList, setInProgressList] = useState(null);
-    const [tasksDoneList, setTasksDoneList] = useState(null);
-    // const [todoList,setTodoList] = useState(null);
-    // Fetch tasks when the component mounts
-    // useEffect(() => {
-    //     getAllTasks();
-    // }, [dispatch]); // Only run once on mount
+    const [todoList, setTodoList] = useState(tasks?.filter(task => task?.category?.name === 'todo'));
+    const [inProgressList, setInProgressList] = useState(tasks?.filter(task => task?.category?.name === 'in-progress'));
+    const [tasksDoneList, setTasksDoneList] = useState(tasks?.filter(task => task?.category?.name === 'done'));
 
-    // Update local state whenever tasks change
-    console.log("task in MyTasks.js",tasks);
+    useEffect(() => {
+        // Fetch tasks when the component mounts
+        dispatch(getAllTasks(navigate));
+    }, [dispatch, navigate]);
+
     useEffect(() => {
         if (tasks) {
             setTodoList(tasks.filter(task => task?.category?.name === 'todo'));
@@ -28,16 +26,15 @@ export default function MyTasks() {
             setTasksDoneList(tasks.filter(task => task?.category?.name === 'done'));
         }
     }, [tasks]); // Run whenever tasks change
-    // const navigate = useNavigate()
-    // const [courses, setCourses] = useState([])
-    // console.log(tasks);
+
+
     if (loader) {
         return <div>Loading...</div>
     }
     return (
         <div>
-        <AddTask/>
-        <h1 className="text-richblack-100 text-3xl font-medium text-center">My Tasks</h1>
+            <AddTask />
+            <h1 className="text-richblack-100 text-3xl font-medium text-center">My Tasks</h1>
             <div className="flex w-full gap-4 pt-10">
                 {/* todo */}
                 <div className="w-[60%] h-[30rem] border-2 border-richblack-200 bg-white">
@@ -59,7 +56,7 @@ export default function MyTasks() {
                     <div>In-Progress</div>
                     {/* tasks */}
                     <div>
-                    {
+                        {
                             inProgressList?.map((task, index) => (
                                 <TaskCard key={index} task={task} />
                             ))

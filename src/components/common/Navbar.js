@@ -3,7 +3,21 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, matchPath, useLocation, useNavigate } from 'react-router-dom'
 import { logout } from '../../services/operations/authAPI'
 import ConfirmModal from './ConfirmModal';
-import Profile from './Profile'
+import Profile from './Profile';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBP8CDB8GSlsrWzdh4v7v3Yg0mliOnOKvk",
+    authDomain: "todo-web-application-1e5e8.firebaseapp.com",
+    projectId: "todo-web-application-1e5e8",
+    storageBucket: "todo-web-application-1e5e8.appspot.com",
+    messagingSenderId: "91785028349",
+    appId: "1:91785028349:web:4bd691d0870781db9cd494"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const Navbar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -21,8 +35,21 @@ const Navbar = () => {
             text2: 'You will be logged out of your account',
             btn1Text: "Yes",
             btn1Handler: () => {
-                dispatch(logout(navigate));
-                setModalData(null);
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        signOut(auth)
+                            .then(() => {
+                                console.log('signed out :)');
+                                dispatch(logout(navigate));
+                                setModalData(null);
+                            })
+                    }
+                    else {
+                        dispatch(logout(navigate));
+                        setModalData(null);
+                    }
+                });
+
             },
             btn2Text: "No",
             btn2Handler: () => setModalData(null)

@@ -4,6 +4,7 @@ import { setLoading, setToken } from "../../slices/authSlice";
 import { setUser } from "../../slices/profileSlice";
 import { apiConnector } from "../apiConnector";
 import { endpoints } from "../apis";
+import { setTasks } from "../../slices/taskSlice";
 
 const {
     SENDOTP_API,
@@ -11,6 +12,8 @@ const {
     LOGIN_API,
     RESETPASSTOKEN_API,
     RESETPASSWORD_API,
+    GOOGLE_AUTH_API,
+    GOOGLE_AUTH_LOGIN_API
 } = endpoints;
 
 export function sendOtp(email, navigate) {
@@ -46,9 +49,9 @@ export function signUp(
     firstname,
     lastname,
     email,
-    password,
-    confirmPassword,
-    otp,
+    password = "",
+    confirmPassword = "",
+    otp = "",
     navigate
 ) {
     return async (dispatch) => {
@@ -77,6 +80,28 @@ export function signUp(
         dispatch(setLoading(false));
         toast.dismiss(toastId);
     };
+}
+
+export function googleSignUp(firstname, lastname, email, navigate) {
+    return async (dispatch) => {
+        const toastId = toast.loading("Loading...");
+        dispatch(setLoading(true));
+        try {
+            const response = await apiConnector("POST", GOOGLE_AUTH_API, { firstname, lastname, email });
+            console.log("GOOGLE SIGNUP API RESPONSE............", response);
+            if (!response?.data?.success) {
+                throw new Error(response?.data?.message);
+            }
+            toast.success("Signup Successful");
+            navigate("/login");
+        } catch (error) {
+            console.log("GOOGLE SIGNUP API ERROR............", error?.response?.data);
+            toast.error("Signup Failed" + error?.response?.data?.message);
+            navigate("/signup");
+        }
+        dispatch(setLoading(false));
+        toast.dismiss(toastId);
+    }
 }
 
 export function login(email, password, navigate) {
@@ -108,6 +133,8 @@ export function login(email, password, navigate) {
             //     JSON.stringify(response?.data?.user?.token)
             // );
             localStorage.setItem("user", JSON.stringify(response.data.user));
+            dispatch(setTasks(response?.data?.user?.tasks))
+            localStorage.setItem('tasks', JSON.stringify(response?.data?.user?.tasks));
             // document.cookie = `token=${response?.data?.user?.token}; path=/;`;
             navigate("/dashboard/my-profile");
         } catch (error) {
@@ -118,15 +145,46 @@ export function login(email, password, navigate) {
         toast.dismiss(toastId);
     };
 }
+export function googleLogIn(email, navigate) {
+
+    return async (dispatch) => {
+        const toastId = toast.loading("Loading...");
+        dispatch(setLoading(true));
+        try {
+            const response = await apiConnector("POST", GOOGLE_AUTH_LOGIN_API, { email }, null, null, true);
+            console.log("GOOGLE LOGIN API RESPONSE............", response);
+            if (!response.data.success) {
+                throw new Error(response.data.message);
+            }
+            toast.success("Login Successful")
+            const userImage = response?.data?.user?.image
+                ? response?.data?.user?.image
+                : `https://api.dicebear.com/5.x/initials/svg?seed=${response?.data?.user?.firstName} ${response?.data?.user?.lastName}`;
+            localStorage.setItem("user", JSON.stringify(response.data.user));
+            dispatch(setUser({ ...response?.data?.user, image: userImage }));
+            localStorage.setItem('tasks', JSON.stringify(response?.data?.user?.tasks));
+            dispatch(setTasks(response?.data?.user?.tasks))
+            navigate("/dashboard/my-profile");
+        }
+        catch (error) {
+            console.log("GOOGLE LOGIN API ERROR............", error);
+            toast.error("Login Failed");
+        }
+        dispatch(setLoading(false));
+        toast.dismiss(toastId);
+    }
+}
 
 export function logout(navigate) {
     return (dispatch) => {
         dispatch(setToken(null));
+        dispatch(setTasks(null));
         dispatch(setUser(null));
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        document.cookie = `token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`
-        toast.success("Logged Out");
+        localStorage.removeItem("tasks");
+        // document.cookie = `token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`
+        // toast.success("Logged Out");
         navigate("/");
     };
 }

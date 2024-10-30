@@ -178,7 +178,6 @@ exports.login = async (req, res) => {
         const payload = {
             email: user.email,
             id: user._id,
-            accountType: user.accountType
         }
         // generating the jwt token 
         const token = jwt.sign(payload, process.env.JWT_SECRET, {
@@ -271,4 +270,101 @@ exports.changePassword = async (req, res) => {
     }
 
 
+}
+exports.googleSignUp = async (req, res) => {
+    try {
+        const { firstname, lastname, email } = req.body;
+
+        if (!firstname || !lastname || !email) {
+            return res.status(400).json({
+                success: false,
+                message: "Please fill all the fields"
+            });
+        }
+        const profileDetails = await Profile.create({
+            gender: null,
+            dateOfBirth: null,
+            about: null,
+            contactNumber: null
+        });
+
+
+        //entry to DB
+        const user = new User({
+            firstname,
+            lastname,
+            email,
+            "additionalDetails": profileDetails._id,
+            image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstname}-${lastname}`,
+
+        });
+        await user.save();
+        return res.status(200).json({
+            success: true,
+            message: "User is registered Successfully",
+            user
+        });
+
+
+    } catch (error) {
+        console.log("Error while registering user: ", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal Server error"
+        })
+    }
+}
+
+exports.googleLogIn = async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                message: "Please fill all the fields"
+            });
+        }
+        let user = await User.findOne({ email }).populate("additionalDetails").populate({
+            path: 'tasks',
+            populate: {
+                path: 'category' // Populate the category field in each task
+            }
+        }).exec();
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: "User does not exist"
+            })
+        }
+        console.log("User : ", user);
+        const payload = {
+            email: user.email,
+            id: user._id,
+        }
+        // generating the jwt token 
+        const token = jwt.sign(payload, process.env.JWT_SECRET, {
+            expiresIn: "1h"
+        });
+
+        user = user.toObject();
+        user.token = token;
+        user.password = undefined;
+
+        const options = {
+            expires: new Date(Date.now() + 36000000),
+            httpOnly: true,
+        }
+
+        res.cookie('token', token, options).status(200).json({
+            success: true,
+            message: "Login Successful",
+            user,
+        });
+    } catch (error) {
+        console.log("Error while logging in: ", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal Server error"
+        })
+    }
 }

@@ -2,9 +2,7 @@ import { createSlice } from "@reduxjs/toolkit"
 import { toast } from "react-hot-toast"
 
 const initialState = {
-    tasks: localStorage.getItem("tasks")
-        ? JSON.parse(localStorage.getItem("tasks"))
-        : [],
+    tasks: localStorage.getItem("tasks") ? JSON.parse(localStorage.getItem("tasks")): null,
     loading : false
 
 }

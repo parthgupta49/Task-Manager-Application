@@ -20,7 +20,7 @@ const EditTaskForm = ({ task }) => {
             ...prevData,
             [e.target.name]: e.target.value,
         }));
-    };
+    }
 
     // Handle Form Submission
     const handleOnSubmit = (e) => {

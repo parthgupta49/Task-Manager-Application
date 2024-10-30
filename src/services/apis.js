@@ -8,19 +8,14 @@ export const endpoints = {
     LOGIN_API: BASE_URL + "/auth/login",
     RESETPASSTOKEN_API: BASE_URL + "/auth/reset-password-token",
     RESETPASSWORD_API: BASE_URL + "/auth/reset-password",
+    GOOGLE_AUTH_API: BASE_URL + "/auth/google-authentication",
+    GOOGLE_AUTH_LOGIN_API: BASE_URL + "/auth/google-authentication-login",
 }
 // PROFILE ENDPOINTS
 export const profileEndpoints = {
     GET_USER_DETAILS_API: BASE_URL + "/profile/getUserDetails",
     GET_USER_ENROLLED_COURSES_API: BASE_URL + "/profile/getEnrolledCourses",
     GET_INSTRUCTOR_DATA_API: BASE_URL + "/profile/instructorDashboard",
-}
-
-
-
-// CONTACT-US API
-export const contactusEndpoint = {
-    CONTACT_US_API: BASE_URL + "/reach/contact",
 }
 
 // SETTINGS PAGE API

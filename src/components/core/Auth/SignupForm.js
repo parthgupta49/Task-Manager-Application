@@ -3,9 +3,28 @@ import { toast } from "react-hot-toast"
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
+import { FcGoogle } from "react-icons/fc";
 
-import { sendOtp } from "../../../services/operations/authAPI"
+import { googleSignUp, sendOtp } from "../../../services/operations/authAPI"
 import { setSignupData } from "../../../slices/authSlice"
+
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBP8CDB8GSlsrWzdh4v7v3Yg0mliOnOKvk", 
+    authDomain: "todo-web-application-1e5e8.firebaseapp.com",
+    projectId: "todo-web-application-1e5e8",
+    storageBucket: "todo-web-application-1e5e8.appspot.com",
+    messagingSenderId: "91785028349",
+    appId: "1:91785028349:web:4bd691d0870781db9cd494"
+};
+
+//initialising
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
 
 function SignupForm() {
     
@@ -59,6 +78,30 @@ function SignupForm() {
             email: "",
             password: "",
             confirmPassword: "",
+        })
+    }
+
+    const handleGoogleSignup = () => {
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(auth,provider)
+        .then((result)=>{
+            //handle the data
+            console.log(result);
+            
+            const firstname = result?.user?.displayName?.split(" ")[0]
+            const lastname = result?.user?.displayName?.split(" ")[1]
+            const email = result.user.email;
+
+            dispatch(googleSignUp(firstname,lastname,email,navigate))
+
+
+            // console.log("USER ",user);
+            // console.table([username,email]);
+
+        })
+        .catch((error)=>{
+            console.log('error in logging in');
+            toast.error("Error signing up with Google")
         })
     }
 
@@ -183,6 +226,16 @@ function SignupForm() {
                 >
                     Create Account
                 </button>
+                <span className="text-richblack-50 text-sm text-center">or signup with</span>
+
+                <button
+                    type = "button"
+                    onClick = {handleGoogleSignup}
+                    className= "mt-2 rounded-[8px] bg-richblack-25 py-[8px] px-[12px] font-medium text-white flex justify-center items-center"
+                >
+                    <span className=""><FcGoogle size={"1.7rem"}/></span>
+                </button>
+
             </form>
         </div>
     )
